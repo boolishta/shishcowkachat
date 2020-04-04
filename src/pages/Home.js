@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from "../services/firebase";
 import { updateName } from '../helpers/auth';
+import { InputGroup, FormControl, Button, Form } from 'react-bootstrap';
 
 class Home extends Component {
   constructor(props) {
@@ -9,7 +10,8 @@ class Home extends Component {
     this.state = {
       error: null,
       user: auth().currentUser,
-      nickName: ""
+      changeableName: "",
+      nickName: auth().currentUser.displayName
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,14 +25,15 @@ class Home extends Component {
   }
   handleChange(event) {
     this.setState({
-      nickName: event.target.value
+      changeableName: event.target.value
     })
   }
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({ error: '' , nickName: ''});
+    this.setState({ error: '' , changeableName: ''});
     try {
-      await updateName(this.state.nickName);
+      await updateName(this.state.changeableName);
+      this.setState({nickName: this.state.user.displayName})
     } catch (error) {
       this.setState({ error: error.message });
     }
@@ -38,14 +41,18 @@ class Home extends Component {
   render() {  
     return (<>
       <div>Домашняя страница</div>
-      <div>mail: {this.state.user.email}</div>
-      <div>nickname: {this.state.user.displayName}</div>
-      <form onSubmit={this.handleSubmit}>
-        <input placeholder="nick" onChange={this.handleChange} value={this.state.nickName}></input>
-        <button>Change Nickname</button>
-      </form>
+      <div>your nickname: {this.state.nickName}</div>
+      <Form onSubmit={this.handleSubmit}>
+        <InputGroup >
+          <InputGroup.Prepend>
+            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl placeholder="nick" type="text" onChange={this.handleChange} value={this.state.changeableName}/>
+          <Button type="submit">Change Name</Button>
+        </InputGroup>
+      </Form>
       <ul>
-        <li><Link to="/chat">Shishcowka Chat</Link></li>
+        <li><Link to="/chat">Перейти в Shishcowka Chat</Link></li>
         <li><Link to="/login">Login</Link></li>
         <li><Link to="/signup">Signup</Link></li>
       </ul>

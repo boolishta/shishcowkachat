@@ -10,6 +10,7 @@ import Chat from './pages/Chat';
 import SignUp from './pages/Signup';
 import Login from './pages/Login';
 import { auth } from './services/firebase'; 
+import { Container, Row, Col } from 'react-bootstrap';
 
 function PrivateRoute({ component: Component, authenticated, ...rest }) {
   return (
@@ -57,16 +58,24 @@ class App extends Component {
     })
   }
   render() {
-    return this.state.loading === true ? <h2>Loading...</h2> : (
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home}></Route>
-          <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
-          <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
-          <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
-        </Switch>
-      </Router>
-    );
+    return this.state.loading === true 
+      ? <h2>Loading...</h2> 
+      : (
+        <Container>
+          <Row>
+            <Col>
+              <Router>
+                <Switch>
+                  <Route exact path="/" component={Home}></Route>
+                  <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
+                  <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
+                  <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
+                </Switch>
+              </Router>
+            </Col>
+          </Row>
+        </Container>
+      );
   }
   
 }
