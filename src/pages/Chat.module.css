@@ -1,0 +1,10 @@
+.chat{
+  height: 500px;
+  padding: 15px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+}
+.send{
+  display: flex;
+}

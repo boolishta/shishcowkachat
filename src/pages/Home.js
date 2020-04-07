@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
+import { Alert, Button, Col, Container, Form, FormControl, InputGroup, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { auth } from "../services/firebase";
 import { updateName } from '../helpers/auth';
-import { InputGroup, FormControl, Button, Form } from 'react-bootstrap';
+import { auth } from "../services/firebase";
+import Header from './Header';
+import style from './Home.module.css';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
       user: auth().currentUser,
+      error: null,
       changeableName: "",
-      nickName: auth().currentUser.displayName
+      nickName: ""
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.doSignOut = this.doSignOut.bind(this);
-  }
-  doSignOut() {
-    auth().signOut().then(function() {
-    }).catch(function(error) {
-      // An error happened.
-    });
   }
   handleChange(event) {
     this.setState({
@@ -30,35 +25,52 @@ class Home extends Component {
   }
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({ error: '' , changeableName: ''});
+    this.setState({ error: '', changeableName: '' });
     try {
       await updateName(this.state.changeableName);
-      this.setState({nickName: this.state.user.displayName})
+      let nickName = auth().currentUser.displayName;
+      this.setState({ nickName })
     } catch (error) {
       this.setState({ error: error.message });
     }
   }
-  render() {  
+  componentDidMount() {
+    this.setState({ nickName: this.props.displayName })
+  }
+  render() {
+    const { authenticated } = this.props;
     return (<>
-      <div>Домашняя страница</div>
-      <div>your nickname: {this.state.nickName}</div>
-      <Form onSubmit={this.handleSubmit}>
-        <InputGroup >
-          <InputGroup.Prepend>
-            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl placeholder="nick" type="text" onChange={this.handleChange} value={this.state.changeableName}/>
-          <Button type="submit">Change Name</Button>
-        </InputGroup>
-      </Form>
-      <ul>
-        <li><Link to="/chat">Перейти в Shishcowka Chat</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        <li><Link to="/signup">Signup</Link></li>
-      </ul>
-      <div><button onClick={this.doSignOut}>Sign Out</button></div>
-      </>
-    )
+            <Header displayName={this.state.nickName} authenticated={authenticated} />
+      <Container>
+
+
+        <Row className={style.navbar}>
+          <Col md={8} xs={7}>
+            <Link to="/chat">Go to ShishcowkaChat</Link>            
+          </Col>
+          <Col md={4} xs={5} className={style.login}>
+            <Link to="/login">Login</Link>
+            <Link to="/signup">Register</Link>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={5}>
+          {this.props.authenticated &&
+              <Form onSubmit={this.handleSubmit} className={style.changeName}>
+                <InputGroup >
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <FormControl placeholder="change your nick" type="text" onChange={this.handleChange} value={this.state.changeableName} required/>
+                  <Button type="submit">Ok</Button>
+                </InputGroup>
+                {this.state.error && <Alert variant="warning">Somethig wrong :(</Alert>}
+              </Form>
+            }
+          </Col>
+        </Row>
+      </Container>
+    </>)
   }
 }
 

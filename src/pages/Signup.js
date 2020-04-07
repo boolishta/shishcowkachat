@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import { signInWithGitHub, signInWithGoogle, signup } from '../helpers/auth';
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
 
 export default class SignUp extends Component {
   constructor(props) {
@@ -45,34 +46,33 @@ export default class SignUp extends Component {
   }
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <h1>
-            Sign Up To
-            <Link to="/">ShishcowkaChat</Link>
-          </h1>
-          <p>Fill i the form below to create an account</p>
-          <div>
-            <input placeholder="Email" name="email" type="email" onChange={this.handleChange} value={this.state.email}></input>
-          </div>
-          <div>
-            <input placeholder="Password" name="password" type="password" onChange={this.handleChange} value={this.state.password}></input>
-          </div>
-          <div>
-            {this.state.error ? <p>{this.state.error}</p> : null}
-            <button type="submit">Sign Up</button>
-          </div>
-          <p>Or</p>
-          <button onClick={this.googleSignIn} type="button">
-            Sign up with Google
-          </button>
-          <button type="button" onClick={this.githubSignIn}>
-            Sign up with GitHub
-          </button>
-          <hr></hr>
-          <p>Already have an account? <Link to="/login">Login</Link></p>
-        </form>
-      </div>
+      <Container>
+        <Row>
+          <Col md={6}>
+            <Form onSubmit={this.handleSubmit}>
+              <h1>Sign Up To <Link to="/">ShishcowkaChat</Link></h1>
+              <p>Fill i the form below to create an account</p>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Control placeholder="Email" name="email" type="email" onChange={this.handleChange} value={this.state.email}></Form.Control>
+              </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Control placeholder="Password" name="password" type="password" onChange={this.handleChange} value={this.state.password}></Form.Control>
+              </Form.Group>
+              {this.state.error ? <p>{this.state.error}</p> : null}
+              <Button type="submit">Sign Up</Button>
+              <p>Or</p>
+              <Button onClick={this.googleSignIn} type="button" variant="outline-danger">
+                Sign up with Google
+          </Button>
+              <Button type="button" onClick={this.githubSignIn} variant="outline-dark">
+                Sign up with GitHub
+          </Button>
+              <hr></hr>
+              <p>Already have an account? <Link to="/login">Login</Link></p>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
     )
   }
 }

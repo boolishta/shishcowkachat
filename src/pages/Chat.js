@@ -1,34 +1,44 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { auth, db } from "../services/firebase";
+import Header from "./Header";
+import style from './Chat.module.css';
 
 export default class Chat extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
       user: auth().currentUser,
       chats: [],
       content: '',
-      readError: null,
-      writeError: null
+      error: null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.doSignOut = this.doSignOut.bind(this);
+    this.toEnd = this.toEnd.bind(this);
+  }
+  toEnd() {
+    let block = document.getElementById("test");
+    block.scrollTop = block.scrollHeight;
   }
   async componentDidMount() {
-    this.setState({ readError: null });
+    this._isMounted = true;
     try {
       db.ref("chats").on("value", snapshot => {
         let chats = [];
         snapshot.forEach((snap) => {
           chats.push(snap.val());
         });
-        this.setState({ chats });
+        this._isMounted && this.setState({ chats });
+        this.toEnd();
       });
     } catch (error) {
-      this.setState({ readError: error.message });
-    }
+      this.setState({ error: error.message });
+    }    
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
   }
   handleChange(event) {
     this.setState({
@@ -37,7 +47,6 @@ export default class Chat extends Component {
   }
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({ writeError: null });
     try {
       await db.ref("chats").push({
         content: this.state.content,
@@ -46,36 +55,51 @@ export default class Chat extends Component {
         user: this.state.user.displayName
       });
       this.setState({ content: '' });
+      this.toEnd();
     } catch (error) {
-      this.setState({ writeError: error.message });
+      this.setState({ error: error.message });
     }
+  }  
+  componentDidUpdate() {
+    this.toEnd();
   }
-  doSignOut() {
-    auth().signOut().then(function() {
-    }).catch(function(error) {
-      // An error happened.
-    });
-  }
+  
   render() {
+    const myId = 'test';
     return (
-      <div>
-        <Link to="/">Home</Link>
-        <div className="chats">
-          {this.state.chats.map(chat => {
-            return <p key={chat.timestamp}>{chat.user}: {chat.content}</p>
-          })}
+      <Container>
+        <Row>
+          <Col>
+            <Header displayName={this.state.user.displayName} authenticated />
+          </Col>
+        </Row>
+        <div id={myId} className={style.chat}>
+          { this.state.chats.map(chat => {
+              return (
+                <Row key={chat.timestamp}>
+                  <Col sm={4}>
+                    <strong>{chat.user}</strong>:
+                          </Col>
+                  <Col sm={8}>
+                    {chat.content}
+                  </Col>
+                </Row>)
+              })
+          }
         </div>
 
-        <form onSubmit={this.handleSubmit}>
-          <input onChange={this.handleChange} value={this.state.content}></input>
-          {this.state.error ? <p>{this.state.writeError}</p> : null}
-          <button type="submit">Send</button>
-        </form>
-        <div>
-          Login in as: <strong>{this.state.user.displayName}</strong>
-        </div>
-        <div><button onClick={this.doSignOut}>Sign Out</button></div>
-      </div>
+        <Row>
+          <Col>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group className={style.send}>
+                <Form.Control onChange={this.handleChange} value={this.state.content} type="text" required></Form.Control>
+                  {this.state.error && <p>{this.state.error}</p>}
+                <Button type="submit" >Send</Button>
+              </Form.Group>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

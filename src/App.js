@@ -1,23 +1,19 @@
 import React, { Component } from 'react';
-import {
-  Route,
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-} from "react-router-dom";
-import Home from './pages/Home';
+import { Spinner, Container, Row, Col } from 'react-bootstrap';
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Chat from './pages/Chat';
-import SignUp from './pages/Signup';
+import Home from './pages/Home';
 import Login from './pages/Login';
-import { auth } from './services/firebase'; 
-import { Container, Row, Col } from 'react-bootstrap';
+import SignUp from './pages/Signup';
+import { auth } from './services/firebase';
+import style from './App.module.css'
 
 function PrivateRoute({ component: Component, authenticated, ...rest }) {
   return (
     <Route
       {...rest}
       render={(props) => authenticated === true
-        ? <Component {...props} />
+        ? <Component {...props} authenticated/>
         : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />}
     />
   )
@@ -40,15 +36,16 @@ class App extends Component {
     this.state = {
       authenticated: false,
       loading: true,
+      displayName: ""
     };
   }
-  componentDidMount() {
-    
+  componentDidMount() {    
     auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
           authenticated: true,
           loading: false,
+          displayName: user.displayName
         });
       } else {
         this.setState({
@@ -59,26 +56,24 @@ class App extends Component {
     })
   }
   render() {
-    return this.state.loading === true 
-      ? <h2>Loading...</h2> 
-      : (
-        <Container>
-          <Row>
-            <Col>
-              <Router>
-                <Switch>
-                  <Route exact path="/" component={Home}></Route>
-                  <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
-                  <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
-                  <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
-                </Switch>
-              </Router>
-            </Col>
-          </Row>
-        </Container>
-      );
-  }
-  
+    const { authenticated, displayName } = this.state;
+    return  (<div className={style.app}>
+              { this.state.loading === true 
+                ? (<Container>
+                    <Row><Col className={style.spinner}><Spinner animation="border" /></Col></Row>
+                    </Container> )
+                : (<Router>
+                      <Switch>
+                        <Route exact path="/" render={() => <Home authenticated={authenticated} displayName={displayName}/>}></Route>
+                        <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
+                        <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
+                        <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
+                      </Switch>
+                    </Router>
+                  )
+              }
+            </div>)
+          }
 }
 
 export default App;

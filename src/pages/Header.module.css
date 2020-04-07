@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  margin: 20px 0;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.nick{
+  display: flex;
+  justify-content: flex-end;
+}
+.nick button{
+  margin-left: 10px;
+  padding: 2px 6px;
+}
+.header .nickAlert{
+  margin: 0;
+  padding: 2px 8px;
+  text-align: center;
+}
+.login{
+  margin-right: 10px;
+}
+
+@media (max-width : 426px)  {
+  /* стили */
+  .login {
+    display: none;
+  }
+  .header .nickAlert{
+    font-size: 10px;
+  }
+}

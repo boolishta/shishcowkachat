@@ -1,0 +1,22 @@
+.login{
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+.changeName {
+  margin-top: 15px;
+}
+.navbar{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 426px) {
+  .login{
+    justify-content: flex-end;
+  }
+  .login a{
+    margin-left: 15px;
+    margin-bottom: 10px;
+  }
+}
