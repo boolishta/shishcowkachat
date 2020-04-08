@@ -42,8 +42,6 @@ class Home extends Component {
     return (<>
             <Header displayName={this.state.nickName} authenticated={authenticated} />
       <Container>
-
-
         <Row className={style.navbar}>
           <Col md={8} xs={7}>
             <Link to="/chat">Go to ShishcowkaChat</Link>            
@@ -68,6 +66,9 @@ class Home extends Component {
               </Form>
             }
           </Col>
+        </Row>
+        <Row>
+          
         </Row>
       </Container>
     </>)

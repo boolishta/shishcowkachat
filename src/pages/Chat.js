@@ -66,20 +66,20 @@ export default class Chat extends Component {
   
   render() {
     const myId = 'test';
-    return (
-      <Container>
-        <Row>
-          <Col>
+    return (<>
+      
+ 
             <Header displayName={this.state.user.displayName} authenticated />
-          </Col>
-        </Row>
+
+        <Container>
         <div id={myId} className={style.chat}>
           { this.state.chats.map(chat => {
+            let user = chat.user;
               return (
                 <Row key={chat.timestamp}>
                   <Col sm={4}>
-                    <strong>{chat.user}</strong>:
-                          </Col>
+                    <strong>{user === undefined ? <>no name</> : user}</strong>:
+                  </Col>
                   <Col sm={8}>
                     {chat.content}
                   </Col>
@@ -89,7 +89,7 @@ export default class Chat extends Component {
         </div>
 
         <Row>
-          <Col>
+          <Col lg={5}>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group className={style.send}>
                 <Form.Control onChange={this.handleChange} value={this.state.content} type="text" required></Form.Control>
@@ -100,6 +100,6 @@ export default class Chat extends Component {
           </Col>
         </Row>
       </Container>
-    );
+    </>);
   }
 }

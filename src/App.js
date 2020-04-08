@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Spinner, Container, Row, Col } from 'react-bootstrap';
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import style from './App.module.css';
 import Chat from './pages/Chat';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import { auth } from './services/firebase';
-import style from './App.module.css'
 
 function PrivateRoute({ component: Component, authenticated, ...rest }) {
   return (
@@ -62,14 +62,14 @@ class App extends Component {
                 ? (<Container>
                     <Row><Col className={style.spinner}><Spinner animation="border" /></Col></Row>
                     </Container> )
-                : (<Router>
+                : (<BrowserRouter >
                       <Switch>
                         <Route exact path="/" render={() => <Home authenticated={authenticated} displayName={displayName}/>}></Route>
                         <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
                         <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
                         <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
                       </Switch>
-                    </Router>
+                    </BrowserRouter>
                   )
               }
             </div>)
