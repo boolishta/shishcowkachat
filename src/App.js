@@ -13,7 +13,7 @@ function PrivateRoute({ component: Component, authenticated, ...rest }) {
     <Route
       {...rest}
       render={(props) => authenticated === true
-        ? <Component {...props} authenticated/>
+        ? <Component {...props} authenticated />
         : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />}
     />
   )
@@ -39,7 +39,7 @@ class App extends Component {
       displayName: ""
     };
   }
-  componentDidMount() {    
+  componentDidMount() {
     auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
@@ -57,23 +57,23 @@ class App extends Component {
   }
   render() {
     const { authenticated, displayName } = this.state;
-    return  (<div className={style.app}>
-              { this.state.loading === true 
-                ? (<Container>
-                    <Row><Col className={style.spinner}><Spinner animation="border" /></Col></Row>
-                    </Container> )
-                : (<BrowserRouter >
-                      <Switch>
-                        <Route exact path="/" render={() => <Home authenticated={authenticated} displayName={displayName}/>}></Route>
-                        <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
-                        <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
-                        <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
-                      </Switch>
-                    </BrowserRouter>
-                  )
-              }
-            </div>)
-          }
+    return (<div className={style.app}>
+      {this.state.loading === true
+        ? (<Container>
+          <Row><Col className={style.spinner}><Spinner animation="border" /></Col></Row>
+        </Container>)
+        : (<BrowserRouter >
+          <Switch>
+            <Route exact path="/" render={() => <Home authenticated={authenticated} displayName={displayName} />}></Route>
+            <PrivateRoute path="/chat" authenticated={this.state.authenticated} component={Chat}></PrivateRoute>
+            <PublicRoute path="/signup" authenticated={this.state.authenticated} component={SignUp}></PublicRoute>
+            <PublicRoute path="/login" authenticated={this.state.authenticated} component={Login}></PublicRoute>
+          </Switch>
+        </BrowserRouter>
+        )
+      }
+    </div>)
+  }
 }
 
 export default App;

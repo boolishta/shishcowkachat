@@ -1,22 +1,17 @@
-.login{
+.main form {
   display: flex;
-  justify-content: space-between;
-  padding: 0;
+  align-items: flex-end;
 }
-.changeName {
+.main form button {
+  margin-left: 10px;
+}
+.login {
+  margin-right: 15px;
+}
+.main .link {
+  margin: 20px 0;
+}
+.main .warning {
   margin-top: 15px;
-}
-.navbar{
-  display: flex;
-  justify-content: space-between;
-}
-
-@media (max-width: 426px) {
-  .login{
-    justify-content: flex-end;
-  }
-  .login a{
-    margin-left: 15px;
-    margin-bottom: 10px;
-  }
+  width: 150px;
 }
