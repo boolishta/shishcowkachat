@@ -1,11 +1,14 @@
-.chat{
-  height: 500px;
+.chat {
   padding: 15px;
   overflow-y: scroll;
   overflow-x: hidden;
   white-space: pre-wrap;
-  height: 83vh;
+  height: 70vh;
 }
-.send{
+.send {
   display: flex;
+  justify-content: space-around;
+}
+.send input {
+  width: 300px;
 }

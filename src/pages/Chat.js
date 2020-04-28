@@ -2,8 +2,9 @@ import React, { Component } from "react"
 import { auth, db } from "../services/firebase"
 import Header from "./Header"
 import style from "./Chat.module.css"
-import { Container, Button, TextField } from "@material-ui/core"
+import { Container, Button, TextField, Icon } from "@material-ui/core"
 import { Message } from "./Message"
+import Alert from "@material-ui/lab/Alert"
 
 export default class Chat extends Component {
   _isMounted = false
@@ -43,22 +44,29 @@ export default class Chat extends Component {
   }
   handleChange(event) {
     this.setState({
+      error: null,
       content: event.target.value,
     })
   }
   async handleSubmit(event) {
     event.preventDefault()
-    try {
-      await db.ref("chats").push({
-        content: this.state.content,
-        timestamp: Date.now(),
-        uid: this.state.user.uid,
-        user: this.state.user.displayName,
+    if (this.state.content.trim().length === 0) {
+      this.setState({
+        error: "пустая строка",
       })
-      this.setState({ content: "" })
-      this.toEnd()
-    } catch (error) {
-      this.setState({ error: error.message })
+    } else {
+      try {
+        await db.ref("chats").push({
+          content: this.state.content,
+          timestamp: Date.now(),
+          uid: this.state.user.uid,
+          user: this.state.user.displayName,
+        })
+        this.setState({ content: "" })
+        this.toEnd()
+      } catch (error) {
+        this.setState({ error: error.message })
+      }
     }
   }
   componentDidUpdate() {
@@ -84,15 +92,19 @@ export default class Chat extends Component {
             })}
           </div>
 
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} className={style.send}>
             <TextField
               onChange={this.handleChange}
               value={this.state.content}
               type='text'
               required
             />
-            {this.state.error && <p>{this.state.error}</p>}
-            <Button type='submit'>Send</Button>
+            {this.state.error && (
+              <Alert severity='error'>{this.state.error}</Alert>
+            )}
+            <Button type='submit' endIcon={<Icon>send</Icon>}>
+              Send
+            </Button>
           </form>
         </Container>
       </>

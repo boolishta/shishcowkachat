@@ -19,7 +19,6 @@ const Header = ({ authenticated, displayName }) => {
       <Link to='/'>HOME</Link>
       {authenticated ? (
         <div className={style.nick}>
-          <span className={style.login}>Login in as </span>{" "}
           <strong> @{displayName}</strong>
           <Button variant='contained' color='primary' onClick={signOut}>
             Quit
