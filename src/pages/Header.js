@@ -1,9 +1,10 @@
-import { Button } from "@material-ui/core"
-import React from "react"
-import { Link } from "react-router-dom"
-import { auth } from "../services/firebase"
-import style from "./Header.module.css"
-import Alert from "@material-ui/lab/Alert"
+import { Button, Paper, SvgIcon, Typography } from '@material-ui/core'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { auth } from '../services/firebase'
+import style from '../css/Header.module.css'
+import Alert from '@material-ui/lab/Alert'
+import HomeIcon from '@material-ui/icons/Home'
 
 const Header = ({ authenticated, displayName }) => {
   const signOut = () => {
@@ -15,19 +16,21 @@ const Header = ({ authenticated, displayName }) => {
       })
   }
   return (
-    <div className={style.header}>
-      <Link to='/'>HOME</Link>
+    <Paper elevation={3} className={style.header}>
+      <Link to='/'>
+        <SvgIcon component={HomeIcon} fontSize='large'></SvgIcon>
+      </Link>
       {authenticated ? (
-        <div className={style.nick}>
+        <Typography className={style.nick}>
           <strong> @{displayName}</strong>
           <Button variant='contained' color='primary' onClick={signOut}>
             Quit
           </Button>
-        </div>
+        </Typography>
       ) : (
         <Alert severity='warning'>Log Out !!!</Alert>
       )}
-    </div>
+    </Paper>
   )
 }
 

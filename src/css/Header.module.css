@@ -1,9 +1,9 @@
 .header {
   display: flex;
-  padding-top: 10px;
+  padding: 10px;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 10px 0;
 }
 .header button {
   margin-left: 10px;

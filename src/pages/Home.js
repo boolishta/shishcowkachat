@@ -1,11 +1,11 @@
-import { Button, Container, TextField, Typography } from "@material-ui/core"
-import React, { Component } from "react"
-import { Link } from "react-router-dom"
-import { updateName } from "../helpers/auth"
-import { auth } from "../services/firebase"
-import Header from "./Header"
-import style from "./Home.module.css"
-import Alert from "@material-ui/lab/Alert"
+import { Button, Container, TextField, Typography } from '@material-ui/core'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { updateName } from '../helpers/auth'
+import { auth } from '../services/firebase'
+import Header from './Header'
+import style from '../css/Home.module.css'
+import Alert from '@material-ui/lab/Alert'
 
 class Home extends Component {
   constructor(props) {
@@ -13,8 +13,8 @@ class Home extends Component {
     this.state = {
       user: auth().currentUser,
       error: null,
-      changeableName: "",
-      nickName: "",
+      changeableName: '',
+      nickName: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -28,10 +28,10 @@ class Home extends Component {
     event.preventDefault()
     if (this.state.changeableName.trim().length === 0) {
       this.setState({
-        error: "is empty",
+        error: 'is empty',
       })
     } else {
-      this.setState({ error: "", changeableName: "" })
+      this.setState({ error: '', changeableName: '' })
       try {
         await updateName(this.state.changeableName)
         let nickName = auth().currentUser.displayName
@@ -48,7 +48,7 @@ class Home extends Component {
     const { authenticated } = this.props
     return (
       <>
-        <Container maxWidth='xs' className={style.main}>
+        <Container className={style.main}>
           <Header
             displayName={this.state.nickName}
             authenticated={authenticated}

@@ -1,9 +1,15 @@
-import { Button, Container, TextField, Typography } from "@material-ui/core"
-import React, { Component } from "react"
-import { Alert, Spinner } from "react-bootstrap"
-import { Link } from "react-router-dom"
-import { signin, signInWithGitHub, signInWithGoogle } from "../helpers/auth"
-import style from "./Login.module.css"
+import {
+  Button,
+  CircularProgress,
+  Container,
+  TextField,
+  Typography,
+} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import style from '../css/Login.module.css'
+import { signin, signInWithGitHub, signInWithGoogle } from '../helpers/auth'
 
 export default class Login extends Component {
   _isMounted = false
@@ -11,8 +17,8 @@ export default class Login extends Component {
     super(props)
     this.state = {
       error: null,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       loading: false,
     }
     this.handleChange = this.handleChange.bind(this)
@@ -44,7 +50,7 @@ export default class Login extends Component {
     this._isMounted = true
     event.preventDefault()
     this.setState({ loading: true })
-    this.setState({ error: "" })
+    this.setState({ error: '' })
     try {
       await signin(this.state.email, this.state.password)
       this._isMounted && this.setState({ loading: false })
@@ -58,7 +64,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Container component='main' maxWidth='xs' className={style.main}>
+      <Container component='main' className={style.main}>
         <Typography component='h1' variant='h5'>
           Login to <Link to='/'>ShishcowkaChat</Link>
         </Typography>
@@ -93,7 +99,7 @@ export default class Login extends Component {
           />
 
           {this.state.error && (
-            <Alert variant='danger'>{this.state.error}</Alert>
+            <Alert severity='error'>{this.state.error}</Alert>
           )}
           {this.state.loading ? (
             <div>
@@ -105,7 +111,7 @@ export default class Login extends Component {
               >
                 Login
               </Button>
-              <Spinner animation='border' size='sm' />
+              <CircularProgress />
             </div>
           ) : (
             <Button type='submit' variant='contained' color='primary'>

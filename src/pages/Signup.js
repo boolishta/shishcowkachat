@@ -1,16 +1,17 @@
-import React, { Component } from "react"
-import { Link } from "react-router-dom"
-import { signInWithGitHub, signInWithGoogle, signup } from "../helpers/auth"
-import { Container, Typography, TextField, Button } from "@material-ui/core"
-import style from "./Login.module.css"
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { signInWithGitHub, signInWithGoogle, signup } from '../helpers/auth'
+import { Container, Typography, TextField, Button } from '@material-ui/core'
+import style from '../css/Login.module.css'
+import Alert from '@material-ui/lab/Alert'
 
 export default class SignUp extends Component {
   constructor(props) {
     super(props)
     this.state = {
       error: null,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -24,7 +25,7 @@ export default class SignUp extends Component {
   }
   async handleSubmit(event) {
     event.preventDefault()
-    this.setState({ error: "" })
+    this.setState({ error: '' })
     try {
       await signup(this.state.email, this.state.password)
     } catch (error) {
@@ -47,7 +48,7 @@ export default class SignUp extends Component {
   }
   render() {
     return (
-      <Container component='main' maxWidth='xs' className={style.main}>
+      <Container component='main' className={style.main}>
         <Typography component='h1' variant='h5'>
           Sign Up To <Link to='/'>ShishcowkaChat</Link>
         </Typography>
@@ -80,7 +81,9 @@ export default class SignUp extends Component {
             value={this.state.password}
           />
 
-          {this.state.error ? <p>{this.state.error}</p> : null}
+          {this.state.error ? (
+            <Alert severity='info'>{this.state.error}</Alert>
+          ) : null}
           <Button type='submit' variant='contained' color='primary'>
             Sign Up
           </Button>

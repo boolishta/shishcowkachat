@@ -1,11 +1,18 @@
-import React, { Component } from "react"
-import { auth, db } from "../services/firebase"
-import Header from "./Header"
-import style from "./Chat.module.css"
-import { Container, Button, TextField, Icon } from "@material-ui/core"
-import { Message } from "./Message"
-import Alert from "@material-ui/lab/Alert"
+import {
+  Button,
+  Container,
+  Icon,
+  TextField,
+  Typography,
+} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
+import React, { Component } from 'react'
+import style from '../css/Chat.module.css'
+import { auth, db } from '../services/firebase'
+import Header from './Header'
+import { Message } from './Message'
 
+//FIXME: сделать частичную загрузку сообщений
 export default class Chat extends Component {
   _isMounted = false
   constructor(props) {
@@ -13,7 +20,7 @@ export default class Chat extends Component {
     this.state = {
       user: auth().currentUser,
       chats: [],
-      content: "",
+      content: '',
       error: null,
     }
     this.handleChange = this.handleChange.bind(this)
@@ -21,13 +28,13 @@ export default class Chat extends Component {
     this.toEnd = this.toEnd.bind(this)
   }
   toEnd() {
-    let block = document.getElementById("test")
+    let block = document.getElementById('test')
     block.scrollTop = block.scrollHeight
   }
   async componentDidMount() {
     this._isMounted = true
     try {
-      db.ref("chats").on("value", snapshot => {
+      db.ref('chats').on('value', snapshot => {
         let chats = []
         snapshot.forEach(snap => {
           chats.push(snap.val())
@@ -52,17 +59,18 @@ export default class Chat extends Component {
     event.preventDefault()
     if (this.state.content.trim().length === 0) {
       this.setState({
-        error: "пустая строка",
+        error: 'пустая строка',
+        content: '',
       })
     } else {
       try {
-        await db.ref("chats").push({
+        await db.ref('chats').push({
           content: this.state.content,
           timestamp: Date.now(),
           uid: this.state.user.uid,
           user: this.state.user.displayName,
         })
-        this.setState({ content: "" })
+        this.setState({ content: '' })
         this.toEnd()
       } catch (error) {
         this.setState({ error: error.message })
@@ -74,37 +82,35 @@ export default class Chat extends Component {
   }
 
   render() {
-    const myId = "test"
+    const myId = 'test'
+    let { chats, content, error } = this.state
     return (
       <>
-        <Container component='main' maxWidth='xs'>
+        <Container component='main' className={style.main}>
           <Header displayName={this.state.user.displayName} authenticated />
-          <div id={myId} className={style.chat}>
-            {this.state.chats.map(chat => {
-              let user = chat.user
-              return (
-                <Message
-                  user={user}
-                  content={chat.content}
-                  key={chat.timestamp}
-                />
-              )
+          <Typography elevation={3} id={myId} className={style.chat}>
+            {chats.map(chat => {
+              let { user, content, timestamp } = chat
+              return <Message user={user} content={content} key={timestamp} />
             })}
-          </div>
+          </Typography>
 
           <form onSubmit={this.handleSubmit} className={style.send}>
             <TextField
               onChange={this.handleChange}
-              value={this.state.content}
+              value={content}
               type='text'
               required
             />
-            <Button type='submit' endIcon={<Icon>send</Icon>}>
+            <Button type='submit' endIcon={<Icon>send</Icon>} size='small'>
               Send
             </Button>
           </form>
-          {this.state.error && (
-            <Alert severity='error'>{this.state.error}</Alert>
+
+          {error && (
+            <Alert severity='error' className={style.alert}>
+              {error}
+            </Alert>
           )}
         </Container>
       </>
