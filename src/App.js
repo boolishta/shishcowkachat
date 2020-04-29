@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Col, Container, Row, Spinner } from "react-bootstrap"
-import { HashRouter, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import style from "./App.module.css"
 import Chat from "./pages/Chat"
 import Home from "./pages/Home"
@@ -80,7 +80,7 @@ class App extends Component {
             </Row>
           </Container>
         ) : (
-          <HashRouter>
+          <BrowserRouter>
             <Switch>
               <Route
                 exact
@@ -108,7 +108,7 @@ class App extends Component {
                 component={Login}
               ></PublicRoute>
             </Switch>
-          </HashRouter>
+          </BrowserRouter>
         )}
       </div>
     )
