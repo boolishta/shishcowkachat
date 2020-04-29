@@ -99,13 +99,13 @@ export default class Chat extends Component {
               type='text'
               required
             />
-            {this.state.error && (
-              <Alert severity='error'>{this.state.error}</Alert>
-            )}
             <Button type='submit' endIcon={<Icon>send</Icon>}>
               Send
             </Button>
           </form>
+          {this.state.error && (
+            <Alert severity='error'>{this.state.error}</Alert>
+          )}
         </Container>
       </>
     )
